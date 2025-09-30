@@ -18,18 +18,21 @@ import { usePathname } from "next/navigation";
 export default function Navbar() {
   // Navigation links array to be used in both desktop and mobile menus
   const path = usePathname();
-  console.log(path);
   const navigationLinks = [
     { href: "/", label: "Home" },
     { href: "/about", label: "About" },
     { href: "/blogs", label: "Blogs" },
     { href: "/projects", label: "Projects" },
+    { href: "/dashboard", label: "Dashboard" },
   ];
   return (
     <header className="border-b px-4 md:px-6">
       <div className="flex h-16 items-center justify-between gap-4">
+        <Link href="/" className="text-primary hover:text-primary/90">
+          <Logo />
+        </Link>
         {/* Left side */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ml-auto">
           {/* Mobile menu trigger */}
           <Popover>
             <PopoverTrigger asChild>
@@ -65,7 +68,7 @@ export default function Navbar() {
                 </svg>
               </Button>
             </PopoverTrigger>
-            <PopoverContent align="start" className="w-36 p-1 md:hidden">
+            <PopoverContent align="end" className="w-36 p-1 md:hidden">
               <NavigationMenu className="max-w-none *:w-full">
                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                   {navigationLinks.map((link, index) => (
@@ -85,9 +88,6 @@ export default function Navbar() {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <Link href="/" className="text-primary hover:text-primary/90">
-              <Logo />
-            </Link>
             {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
@@ -105,15 +105,6 @@ export default function Navbar() {
               </NavigationMenuList>
             </NavigationMenu>
           </div>
-        </div>
-        {/* Right side */}
-        <div className="flex items-center gap-2">
-          <Button asChild variant="ghost" size="sm" className="text-sm">
-            <a href="#">Sign In</a>
-          </Button>
-          <Button asChild size="sm" className="text-sm">
-            <a href="#">Get Started</a>
-          </Button>
         </div>
       </div>
     </header>
