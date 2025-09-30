@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 import { ReactNode } from "react";
 
 interface Props {
@@ -5,5 +6,11 @@ interface Props {
 }
 
 export default function PublicLayout({ children }: Props) {
-  return <div>{children}</div>;
+  return (
+    <div>
+      <Navbar />
+
+      {children}
+    </div>
+  );
 }

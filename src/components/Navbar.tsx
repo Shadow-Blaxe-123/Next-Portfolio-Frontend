@@ -1,26 +1,30 @@
-import Logo from "@/components/navbar-components/logo"
-import { Button } from "@/components/ui/button"
+"use client";
+import Logo from "@/components/Logo";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "@/components/ui/navigation-menu"
+} from "@/components/ui/navigation-menu";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-// Navigation links array to be used in both desktop and mobile menus
-const navigationLinks = [
-  { href: "#", label: "Home", active: true },
-  { href: "#", label: "Features" },
-  { href: "#", label: "Pricing" },
-  { href: "#", label: "About" },
-]
-
-export default function Component() {
+export default function Navbar() {
+  // Navigation links array to be used in both desktop and mobile menus
+  const path = usePathname();
+  console.log(path);
+  const navigationLinks = [
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About" },
+    { href: "/blogs", label: "Blogs" },
+    { href: "/projects", label: "Projects" },
+  ];
   return (
     <header className="border-b px-4 md:px-6">
       <div className="flex h-16 items-center justify-between gap-4">
@@ -69,7 +73,7 @@ export default function Component() {
                       <NavigationMenuLink
                         href={link.href}
                         className="py-1.5"
-                        active={link.active}
+                        active={link.href === path}
                       >
                         {link.label}
                       </NavigationMenuLink>
@@ -81,16 +85,16 @@ export default function Component() {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <a href="#" className="text-primary hover:text-primary/90">
+            <Link href="/" className="text-primary hover:text-primary/90">
               <Logo />
-            </a>
+            </Link>
             {/* Navigation menu */}
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link, index) => (
                   <NavigationMenuItem key={index}>
                     <NavigationMenuLink
-                      active={link.active}
+                      active={link.href === path}
                       href={link.href}
                       className="text-muted-foreground hover:text-primary py-1.5 font-medium"
                     >
@@ -113,5 +117,5 @@ export default function Component() {
         </div>
       </div>
     </header>
-  )
+  );
 }
