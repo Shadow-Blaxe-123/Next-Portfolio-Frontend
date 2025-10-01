@@ -26,7 +26,7 @@ export default function Navbar() {
     { href: "/dashboard", label: "Dashboard" },
   ];
   return (
-    <header className="border-b px-4 md:px-6">
+    <header className="border-b border-b-primary px-4 md:px-6">
       <div className="flex h-16 items-center justify-between gap-4">
         <Link href="/" className="text-primary hover:text-primary/90">
           <Logo />
