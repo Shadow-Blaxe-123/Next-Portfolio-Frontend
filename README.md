@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌐 My Portfolio Website – Requirements (NextJS + Prisma + ExpressJS)
 
-## Getting Started
+## Project Overview
 
-First, run the development server:
+Design and build a **personal portfolio website** with the following core features, ensuring good practices are implemented for better discoverability:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Authentication & Authorization**: Secure login system allowing the portfolio owner to access a private dashboard to manage blogs, projects, and other content.
+- **Dashboard**: A centralized dashboard to manage blog posts and view dynamic project content.
+- **Blog Management**: Create a dynamic blog management system that allows owner to create, read, update, and delete blogs (Owner Only).
+- **About Me Section**: Display personal information, work experience, and skills (Public).
+- **Projects Showcase**: Include a section for personal projects (Public).
+- Responsive UI and polished UX.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Frontend Framework**: NextJS
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS (with responsive utility classes) or other CSS frameworks
+- **Backend**: Node.js/Express, Postgres + Prisma or MongoDB + Mongoose, JWT + bcrypt (Secure Authentication)
+- **For notifications**: react-hot-toast
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📌 Minimum Requirements
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Public Pages (Accessible to All Visitors – No Login Required)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Blog Management**
+  - Public users should be able to view all blogs page and individual blog pages.
+  - Use **ISR** for the "All Blogs" page to fetch new content without rebuilding the entire site.
+  - Use ISR with `getStaticPaths` + `revalidate` for individual blog pages to generate content dynamically for each user request.
+- **About Me Section**
+  - This section should include static personal details (name, contact info, bio, etc.).
+  - Fetch static content using **SSG** for fast performance.
+- **Project Showcase**
+  - A section dedicated to personal projects with **thumbnail**, **project link**, **live site**, **description, and features**.
+  - Use **ISR** to allow dynamic updates or fetching of project data.
 
-## Deploy on Vercel
+### Private Pages (Only for Portfolio Owner)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Authorization & Authentication**
+  - Use **JWT-based authentication**.
+  - **Owner Access:** Only the owner must log in to access private features.
+  - **Backend Setup:** Seed an admin user during backend implementation to enable owner login.
+  - Passwords securely hashed with bcrypt.
+- **Dashboard**
+  - A dynamic **owner-only dashboard** where the owner can access a private dashboard to manage blogs, projects, and other content.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Bonus (Optional)
+
+This section is not required to meet the main requirements, but completing it can help you earn full marks.
+
+- **Rich Text Editor**
+  - Use a **rich text editor** to create, edit, and format blog/project content.
+  - Include options like bold, italic, links, images, etc.
+  - **Example Package:** React Quill
+
+---
+
+## ❄️ General UI/UX Enhancements
+
+- Interactive UI: carousels, cards, skeletons and smooth transitions.
+- Lazy-loading for heavy assets, no broken links or non-functional buttons.
+- Accessibility-compliant components and semantic HTML.
+- **Strict Error Handling (⚠️ Mandatory for Full Marks)**
+  - Proper form validation with clear error messages (e.g., required fields, invalid email, password mismatch).
+  - User-friendly messages for API/network errors and unauthorized actions.
+  - Success/error feedback via toast/alerts (e.g., `react-hot-toast`).
+
+⚠️ **Important:** If you fail to handle form validation errors or API errors properly, **your marks will be significantly reduced.**
+
+---
+
+## Submission Guidelines
+
+### 1. Codebase
+
+- Clean, modular code following best practices.
+- Include a comprehensive `README.md` with:
+  - Live deployment link
+  - Project overview & features
+  - Technology stack
+  - Setup instructions
+  - Any other relevant notes
+
+### 2. GitHub Repository
+
+- Separate repositories/mono for **Frontend** and **Backend**.
+- Minimum **10 meaningful commits** per repo showing development progress.
+
+### 3. Live Deployment
+
+- Provide live URLs for both frontend and backend.
+
+### 4. Demo Video
+
+- 10-15 minute walkthrough of the project.
+
+### 5. Credentials
+
+- Provide admin login details (email & password) for testing.
+
+> **Note:** Missing any of the above (links, credentials, or demo video) will result in **0 marks**.
+
+---
+
+## 📅 Deadline & Marking Scheme
+
+| **Submission Date**                          | **Marks Available** |
+| -------------------------------------------- | ------------------- |
+| On or before **October 05, 2025 – 11:59 PM** | 🟢 Full 60 Marks     |
+| After **October 05, 2025**                   | 🔴 30 Marks Max      |
+
