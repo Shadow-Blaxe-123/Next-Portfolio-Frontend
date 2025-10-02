@@ -1,3 +1,9 @@
+import HeroSection from "@/components/modules/Home/HeroSection";
+
 export default function Home() {
-  return <div className="text-primary text-9xl">hello</div>;
+  return (
+    <div>
+      <HeroSection />
+    </div>
+  );
 }
