@@ -105,13 +105,3 @@ This section is not required to meet the main requirements, but completing it ca
 - Provide admin login details (email & password) for testing.
 
 > **Note:** Missing any of the above (links, credentials, or demo video) will result in **0 marks**.
-
----
-
-## 📅 Deadline & Marking Scheme
-
-| **Submission Date**                          | **Marks Available** |
-| -------------------------------------------- | ------------------- |
-| On or before **October 05, 2025 – 11:59 PM** | 🟢 Full 60 Marks     |
-| After **October 05, 2025**                   | 🔴 30 Marks Max      |
-
