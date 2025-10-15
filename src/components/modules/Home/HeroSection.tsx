@@ -1,7 +1,9 @@
+"use client";
 import StarryBackground from "@/components/StarryBackground";
 import { Button } from "@/components/ui/button";
 import { ArrowDownToLine } from "lucide-react";
 import Link from "next/link";
+import { TypeAnimation } from "react-type-animation";
 
 function HeroSection() {
   return (
@@ -9,11 +11,27 @@ function HeroSection() {
       <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-100px)]  text-center px-4">
         <StarryBackground />
         {/* Heading with fade-in */}
-        <h1 className="text-5xl font-extrabold mb-6 text-white">
+        <h1 className="text-5xl font-extrabold mb-4 text-white">
           Hey there, I’m <span className="text-primary">Shamyun Ahmed</span>
         </h1>
 
-        {/* Subtext with fade-in */}
+        <TypeAnimation
+          sequence={[
+            "I build modern fullstack web apps 💻",
+            1500,
+            "I design clean, fast UIs ⚡",
+            1500,
+            "I explore AI, Web, and Robotics 🤖 and other new technologies",
+            1500,
+            "I am an avid Reader 📚",
+            1500,
+          ]}
+          speed={50}
+          style={{ fontSize: "1.5em" }}
+          repeat={Infinity}
+          className="text-white/80"
+        />
+
         <p className="text-lg mb-8 text-gray-200 space-y-4 max-w-3xl">
           <span>
             I’m a{" "}

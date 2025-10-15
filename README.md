@@ -7,7 +7,6 @@ Design and build a **personal portfolio website** with the following core featur
 - **Authentication & Authorization**: Secure login system allowing the portfolio owner to access a private dashboard to manage blogs, projects, and other content.
 - **Dashboard**: A centralized dashboard to manage blog posts and view dynamic project content.
 - **Blog Management**: Create a dynamic blog management system that allows owner to create, read, update, and delete blogs (Owner Only).
-- **About Me Section**: Display personal information, work experience, and skills (Public).
 - **Projects Showcase**: Include a section for personal projects (Public).
 - Responsive UI and polished UX.
 
