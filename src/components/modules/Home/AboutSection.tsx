@@ -37,9 +37,6 @@ function AboutSection() {
       </h2>
       <div className=" items-center">
         <div>
-          {/* <img src="/profile.jpg" alt="Shamun Ahmed" className="rounded-2xl shadow-lg w-full" /> */}
-        </div>
-        <div>
           <p className="text-lg text-foreground mb-4">
             👋 Hey, I’m Shamyun Ahmed I’m an aspiring Full-Stack Developer with
             a passion for building fast, clean, and user-focused web
