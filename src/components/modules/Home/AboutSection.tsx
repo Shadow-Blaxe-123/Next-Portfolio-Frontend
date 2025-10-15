@@ -31,7 +31,7 @@ function AboutSection() {
     { name: "Java", icon: <LiaJava className="text-blue-300" /> },
   ];
   return (
-    <section className="max-w-5xl mx-auto p-4">
+    <div className="max-w-5xl mx-auto p-4" id="about">
       <h2 className="text-6xl font-bold mb-6 text-center text-primary">
         About Me
       </h2>
@@ -82,7 +82,7 @@ function AboutSection() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 export default AboutSection;
