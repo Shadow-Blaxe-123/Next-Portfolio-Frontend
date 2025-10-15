@@ -6,7 +6,7 @@ import Link from "next/link";
 function HeroSection() {
   return (
     <div>
-      <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-80px)]  text-center px-4">
+      <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-100px)]  text-center px-4">
         <StarryBackground />
         {/* Heading with fade-in */}
         <h1 className="text-5xl font-extrabold mb-6 text-white">
