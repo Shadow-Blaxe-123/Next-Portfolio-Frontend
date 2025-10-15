@@ -51,7 +51,7 @@ function AboutSection() {
             who can build across web, mobile, and AI-powered systems.
           </p>
           <div className="text-lg text-foreground mb-4">
-            <h3 className="text-3xl font-semibold text-primary">
+            <h3 className="text-3xl font-semibold text-primary text-center mb-6">
               🚀 My Goals:
             </h3>
             <p>
