@@ -1,6 +1,4 @@
-# 🌐 My Portfolio Website – Requirements (NextJS + Prisma + ExpressJS)
-
-## Project Overview
+# Project Overview
 
 Design and build a **personal portfolio website** with the following core features, ensuring good practices are implemented for better discoverability:
 
@@ -30,9 +28,6 @@ Design and build a **personal portfolio website** with the following core featur
   - Public users should be able to view all blogs page and individual blog pages.
   - Use **ISR** for the "All Blogs" page to fetch new content without rebuilding the entire site.
   - Use ISR with `getStaticPaths` + `revalidate` for individual blog pages to generate content dynamically for each user request.
-- **About Me Section**
-  - This section should include static personal details (name, contact info, bio, etc.).
-  - Fetch static content using **SSG** for fast performance.
 - **Project Showcase**
   - A section dedicated to personal projects with **thumbnail**, **project link**, **live site**, **description, and features**.
   - Use **ISR** to allow dynamic updates or fetching of project data.
@@ -70,10 +65,6 @@ This section is not required to meet the main requirements, but completing it ca
   - User-friendly messages for API/network errors and unauthorized actions.
   - Success/error feedback via toast/alerts (e.g., `react-hot-toast`).
 
-⚠️ **Important:** If you fail to handle form validation errors or API errors properly, **your marks will be significantly reduced.**
-
----
-
 ## Submission Guidelines
 
 ### 1. Codebase
@@ -102,5 +93,3 @@ This section is not required to meet the main requirements, but completing it ca
 ### 5. Credentials
 
 - Provide admin login details (email & password) for testing.
-
-> **Note:** Missing any of the above (links, credentials, or demo video) will result in **0 marks**.
