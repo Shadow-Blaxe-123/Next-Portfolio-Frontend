@@ -19,9 +19,10 @@ export default function Navbar() {
   // Navigation links array to be used in both desktop and mobile menus
   const path = usePathname();
   const homeRoute = path === "/" ? "#hero" : "/";
+  const aboutRoute = path === "/" ? "#about" : "/about";
   const navigationLinks = [
     { href: homeRoute, label: "Home" },
-    { href: "#about", label: "About" },
+    { href: aboutRoute, label: "About" },
     { href: "/blogs", label: "Blogs" },
     { href: "/projects", label: "Projects" },
     { href: "/dashboard", label: "Dashboard" },
