@@ -2,7 +2,6 @@
 
 Design and build a **personal portfolio website** with the following core features, ensuring good practices are implemented for better discoverability:
 
-- **Authentication & Authorization**: Secure login system allowing the portfolio owner to access a private dashboard to manage blogs, projects, and other content.
 - **Dashboard**: A centralized dashboard to manage blog posts and view dynamic project content.
 - **Blog Management**: Create a dynamic blog management system that allows owner to create, read, update, and delete blogs (Owner Only).
 - **Projects Showcase**: Include a section for personal projects (Public).
@@ -15,7 +14,6 @@ Design and build a **personal portfolio website** with the following core featur
 - **Frontend Framework**: NextJS
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS (with responsive utility classes) or other CSS frameworks
-- **Backend**: Node.js/Express, Postgres + Prisma or MongoDB + Mongoose, JWT + bcrypt (Secure Authentication)
 - **For notifications**: react-hot-toast
 
 ---
@@ -34,11 +32,6 @@ Design and build a **personal portfolio website** with the following core featur
 
 ### Private Pages (Only for Portfolio Owner)
 
-- **Authorization & Authentication**
-  - Use **JWT-based authentication**.
-  - **Owner Access:** Only the owner must log in to access private features.
-  - **Backend Setup:** Seed an admin user during backend implementation to enable owner login.
-  - Passwords securely hashed with bcrypt.
 - **Dashboard**
   - A dynamic **owner-only dashboard** where the owner can access a private dashboard to manage blogs, projects, and other content.
 
