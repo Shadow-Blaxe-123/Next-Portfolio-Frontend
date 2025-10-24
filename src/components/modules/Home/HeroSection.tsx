@@ -1,5 +1,5 @@
 "use client";
-import StarryBackground from "@/components/StarryBackground";
+import StarryBackground from "@/components/modules/Home/StarryBackground";
 import { Button } from "@/components/ui/button";
 import { ArrowDownToLine } from "lucide-react";
 import Link from "next/link";
