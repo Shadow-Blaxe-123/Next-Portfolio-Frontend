@@ -10,6 +10,14 @@ async function page() {
     "projects"
   );
 
+  if (!data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-400">
+        <p>Failed to load projects.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center relative min-h-screen">
       <ParticlesBackground />
