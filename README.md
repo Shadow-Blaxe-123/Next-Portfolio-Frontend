@@ -1,22 +1,11 @@
 # Project Overview
 
-Design and build a **personal portfolio website** with the following core features, ensuring good practices are implemented for better discoverability:
-
 - **Dashboard**: A centralized dashboard to manage blog posts and view dynamic project content.
 - **Blog Management**: Create a dynamic blog management system that allows owner to create, read, update, and delete blogs (Owner Only).
-- **Projects Showcase**: Include a section for personal projects (Public).
-- Responsive UI and polished UX.
-
----
 
 ## Tech Stack
 
-- **Frontend Framework**: NextJS
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS (with responsive utility classes) or other CSS frameworks
 - **For notifications**: react-hot-toast
-
----
 
 ## 📌 Minimum Requirements
 
@@ -26,9 +15,6 @@ Design and build a **personal portfolio website** with the following core featur
   - Public users should be able to view all blogs page and individual blog pages.
   - Use **ISR** for the "All Blogs" page to fetch new content without rebuilding the entire site.
   - Use ISR with `getStaticPaths` + `revalidate` for individual blog pages to generate content dynamically for each user request.
-- **Project Showcase**
-  - A section dedicated to personal projects with **thumbnail**, **project link**, **live site**, **description, and features**.
-  - Use **ISR** to allow dynamic updates or fetching of project data.
 
 ### Private Pages (Only for Portfolio Owner)
 
@@ -45,8 +31,6 @@ This section is not required to meet the main requirements, but completing it ca
   - Use a **rich text editor** to create, edit, and format blog/project content.
   - Include options like bold, italic, links, images, etc.
   - **Example Package:** React Quill
-
----
 
 ## ❄️ General UI/UX Enhancements
 
