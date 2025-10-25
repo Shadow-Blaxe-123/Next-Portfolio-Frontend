@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface Project {
   id: string;
   title: string;
@@ -17,4 +19,8 @@ export interface Blog {
   content: string;
   isFeatured: boolean;
   thumbnailUrl: string | null;
+}
+
+export interface PageLayoutProps {
+  children: ReactNode;
 }

@@ -1,12 +1,8 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import { ReactNode } from "react";
+import { PageLayoutProps } from "@/interface";
 
-interface Props {
-  children: ReactNode;
-}
-
-export default function PublicLayout({ children }: Props) {
+export default function PublicLayout({ children }: PageLayoutProps) {
   return (
     <div className="flex flex-col min-h-screen">
       <div className="sticky top-0 z-50">

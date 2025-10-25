@@ -9,13 +9,6 @@
 
 ## 📌 Minimum Requirements
 
-### Public Pages (Accessible to All Visitors – No Login Required)
-
-- **Blog Management**
-  - Public users should be able to view all blogs page and individual blog pages.
-  - Use **ISR** for the "All Blogs" page to fetch new content without rebuilding the entire site.
-  - Use ISR with `getStaticPaths` + `revalidate` for individual blog pages to generate content dynamically for each user request.
-
 ### Private Pages (Only for Portfolio Owner)
 
 - **Dashboard**
