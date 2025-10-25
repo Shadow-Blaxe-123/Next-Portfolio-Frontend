@@ -4,6 +4,28 @@ import { Link2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const { id } = await params;
+
+  const blog = await fetchData<Project>(
+    `https://next-portfolio-backend-zeta.vercel.app/api/v1/projects/get/${id}`,
+    ["projects"],
+    "project"
+  );
+
+  if (!blog) {
+    return {
+      title: "Blog Not Found",
+      description: "This blog could not be loaded.",
+    };
+  }
+
+  return {
+    title: blog.title,
+    description: blog.description,
+  };
+}
+
 export default async function ProjectPage({
   params,
 }: {

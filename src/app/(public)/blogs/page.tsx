@@ -22,9 +22,7 @@ async function page() {
     <div className="text-center relative min-h-screen">
       <FireflyBackground />
       <div className="z-50">
-        <h1 className="my-10 text-6xl font-semibold text-primary">
-          My Projects
-        </h1>
+        <h1 className="my-10 text-6xl font-semibold text-primary">My Blogs</h1>
         <div>
           <BlogCard data={data as Blog[]} />
         </div>
