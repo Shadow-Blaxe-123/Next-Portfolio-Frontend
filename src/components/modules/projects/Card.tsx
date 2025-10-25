@@ -1,4 +1,3 @@
-// app/components/ProjectCard.tsx
 import {
   Card,
   CardAction,
@@ -13,26 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 // Server Component
-async function ProjectCard() {
-  let data: Project[] = [];
-
-  try {
-    const res = await fetch(
-      "https://next-portfolio-backend-zeta.vercel.app/api/v1/projects/get-all",
-      {
-        next: { tags: ["projects"] }, // ISR tag
-      }
-    );
-
-    if (!res.ok) throw new Error("Failed to fetch projects");
-
-    const json = await res.json();
-    console.log(json.data);
-    data = json.data.projects as Project[];
-  } catch (err) {
-    console.error(err);
-  }
-
+async function ProjectCard({ data }: { data: Project[] }) {
   return (
     <div className="grid md:grid-cols-3 gap-10 mx-auto">
       {data.map((project) => (
@@ -50,6 +30,7 @@ async function ProjectCard() {
                   src={project.thumbnailUrl}
                   alt={project.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover rounded-t-md"
                   priority={true} // optional, for LCP images
                 />
