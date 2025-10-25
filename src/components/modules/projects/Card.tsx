@@ -21,7 +21,9 @@ async function ProjectCard({ data }: { data: Project[] }) {
             <CardTitle>{project.title}</CardTitle>
             {/* <CardDescription>{project.description}</CardDescription> */}
             <CardAction>
-              <ExternalLinkIcon />
+              <Link href={`/projects/${project.id}`}>
+                <ExternalLinkIcon />
+              </Link>
             </CardAction>
             {/* Thumbnail */}
             {project.thumbnailUrl && (

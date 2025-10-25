@@ -9,6 +9,7 @@ export interface Project {
   thumbnailUrl: string | null;
   videoUrl: string | null;
 }
+
 export interface Blog {
   id: string;
   title: string;

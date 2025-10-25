@@ -1,26 +1,15 @@
 import ProjectCard from "@/components/modules/projects/Card";
 import { ParticlesBackground } from "@/components/modules/projects/Particles";
 import { Project } from "@/interface";
+import fetchData from "@/lib/fetchHelper";
 
 async function page() {
-  let data: Project[] = [];
+  const data = await fetchData<Project[]>(
+    "https://next-portfolio-backend-zeta.vercel.app/api/v1/projects/get-all",
+    ["projects"],
+    "projects"
+  );
 
-  try {
-    const res = await fetch(
-      "https://next-portfolio-backend-zeta.vercel.app/api/v1/projects/get-all",
-      {
-        next: { tags: ["projects"] }, // ISR tag
-      }
-    );
-
-    if (!res.ok) throw new Error("Failed to fetch projects");
-
-    const json = await res.json();
-    // console.log(json.data);
-    data = json.data.projects as Project[];
-  } catch (err) {
-    console.error(err);
-  }
   return (
     <div className="text-center relative min-h-screen">
       <ParticlesBackground />
@@ -29,7 +18,7 @@ async function page() {
           My Projects
         </h1>
         <div>
-          <ProjectCard data={data} />
+          <ProjectCard data={data as Project[]} />
         </div>
       </div>
     </div>
