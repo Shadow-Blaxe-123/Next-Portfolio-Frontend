@@ -22,6 +22,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import "quill/dist/quill.snow.css";
 import type Quill from "quill";
 import Image from "next/image";
+import { toast } from "sonner";
 
 const blogSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters."),
@@ -122,17 +123,37 @@ export default function BlogCreateForm() {
     setSubmitting(true);
     try {
       const formData = new FormData();
-      formData.append("title", values.title);
-      formData.append("description", values.description);
-      formData.append("content", values.content);
-      formData.append("isFeatured", values.isFeatured.toString());
-      if (selectedFile) formData.append("thumbnail", selectedFile);
+      formData.append(
+        "data",
+        JSON.stringify({
+          title: values.title,
+          description: values.description,
+          content: values.content,
+          isFeatured: values.isFeatured,
+        })
+      );
+      if (selectedFile) formData.append("file", selectedFile);
 
       console.log(...formData);
 
-      //   form.reset();
-      //   setPreviewUrl("");
-      //   setSelectedFile(null);
+      const res = await fetch(
+        "https://next-portfolio-backend-zeta.vercel.app/api/v1/blogs/create",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const r = await res.json();
+      console.log(r);
+      if (r.success === true) {
+        toast.success("Blog created successfully.");
+      } else {
+        toast.error("Failed to create blog.");
+      }
+
+      form.reset();
+      setPreviewUrl("");
+      setSelectedFile(null);
       if (editorInstance.current) editorInstance.current.root.innerHTML = "";
     } catch (error) {
       console.error(error);
@@ -187,7 +208,7 @@ export default function BlogCreateForm() {
             <div>
               <FormLabel>Content</FormLabel>
               <div className="border rounded-md min-h-[500px]">
-                <div ref={quillRef} className="h-[500px]" />
+                <div ref={quillRef} className="h-full" />
               </div>
               {!form.getValues("content") && quillLoaded && (
                 <p className="text-sm text-red-500 mt-1">
