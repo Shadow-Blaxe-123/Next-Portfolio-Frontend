@@ -84,7 +84,7 @@ export default async function ProjectPage({
           </Link>
         )}
 
-        {typeof project.liveUrl === "string" && (
+        {project.liveUrl && (
           <Link
             href={project.liveUrl}
             target="_blank"
@@ -97,9 +97,10 @@ export default async function ProjectPage({
 
       {/* Content */}
       <article className="prose prose-invert max-w-none">
-        <p className="whitespace-pre-line text-gray-300 leading-relaxed">
-          {project.content}
-        </p>
+        <div
+          className="prose max-w-none"
+          dangerouslySetInnerHTML={{ __html: project.content }}
+        />
       </article>
     </main>
   );
