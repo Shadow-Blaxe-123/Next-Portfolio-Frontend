@@ -68,9 +68,10 @@ export default async function BlogPage({
 
       {/* Content */}
       <article className="prose prose-invert max-w-none">
-        <p className="whitespace-pre-line text-gray-300 leading-relaxed">
-          {blog.content}
-        </p>
+        <div
+          className="prose max-w-none"
+          dangerouslySetInnerHTML={{ __html: blog.content }}
+        />
       </article>
     </main>
   );
