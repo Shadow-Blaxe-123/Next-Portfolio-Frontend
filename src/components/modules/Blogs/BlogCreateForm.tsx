@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Upload, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -19,7 +20,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import "quill/dist/quill.snow.css";
-import Quill from "quill";
+import type Quill from "quill";
+import Image from "next/image";
 
 const blogSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters."),
@@ -28,7 +30,6 @@ const blogSchema = z.object({
     .min(10, "Description must be at least 10 characters."),
   content: z.string().min(1, "Content cannot be empty."),
   isFeatured: z.boolean(),
-  thumbnailUrl: z.union([z.url(), z.literal(""), z.null()]).optional(),
 });
 
 type BlogFormValues = z.infer<typeof blogSchema>;
@@ -36,8 +37,13 @@ type BlogFormValues = z.infer<typeof blogSchema>;
 export default function BlogCreateForm() {
   const [submitting, setSubmitting] = useState(false);
   const [quillLoaded, setQuillLoaded] = useState(false);
+  const [dragActive, setDragActive] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string>("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
   const quillRef = useRef<HTMLDivElement | null>(null);
   const editorInstance = useRef<Quill | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<BlogFormValues>({
     resolver: zodResolver(blogSchema),
@@ -46,11 +52,10 @@ export default function BlogCreateForm() {
       description: "",
       content: "",
       isFeatured: false,
-      thumbnailUrl: "",
     },
   });
 
-  // Initialize Quill only in the browser
+  // Initialize Quill
   useEffect(() => {
     async function initQuill() {
       if (typeof window === "undefined") return;
@@ -60,33 +65,74 @@ export default function BlogCreateForm() {
         placeholder: "Write your blog content here...",
       });
 
-      // Sync Quill content with form state
-      if (editorInstance.current !== null) {
-        editorInstance.current.on("text-change", () => {
-          form.setValue("content", editorInstance.current!.root.innerHTML);
-        });
-      }
+      editorInstance.current.on("text-change", () => {
+        form.setValue("content", editorInstance.current!.root.innerHTML);
+      });
 
       setQuillLoaded(true);
     }
-
     initQuill();
   }, [form]);
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      if (file.type.startsWith("image/")) {
+        setSelectedFile(file);
+        setPreviewUrl(URL.createObjectURL(file));
+      } else {
+        alert("Please upload an image file");
+      }
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (file.type.startsWith("image/")) {
+        setSelectedFile(file);
+        setPreviewUrl(URL.createObjectURL(file));
+      } else {
+        alert("Please upload an image file");
+      }
+    }
+  };
+
+  const removeImage = () => {
+    setSelectedFile(null);
+    setPreviewUrl("");
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   async function onSubmit(values: BlogFormValues) {
     setSubmitting(true);
     try {
-      console.log("Submitting blog:", values);
+      const formData = new FormData();
+      formData.append("title", values.title);
+      formData.append("description", values.description);
+      formData.append("content", values.content);
+      formData.append("isFeatured", values.isFeatured.toString());
+      if (selectedFile) formData.append("thumbnail", selectedFile);
 
-      // Example API call
-      // await fetch("/api/blogs", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(values),
-      // });
+      console.log(...formData);
 
-      alert("Blog created successfully!");
-      form.reset();
+      //   form.reset();
+      //   setPreviewUrl("");
+      //   setSelectedFile(null);
       if (editorInstance.current) editorInstance.current.root.innerHTML = "";
     } catch (error) {
       console.error(error);
@@ -137,7 +183,7 @@ export default function BlogCreateForm() {
               )}
             />
 
-            {/* Content (Quill.js) */}
+            {/* Content */}
             <div>
               <FormLabel>Content</FormLabel>
               <div className="border rounded-md min-h-[500px]">
@@ -150,26 +196,67 @@ export default function BlogCreateForm() {
               )}
             </div>
 
-            {/* Thumbnail URL */}
-            {/* Thumbnail URL */}
-            <FormField
-              control={form.control}
-              name="thumbnailUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Thumbnail URL</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="url"
-                      placeholder="https://example.com/image.jpg"
-                      {...field}
-                      value={field.value ?? ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Thumbnail Upload */}
+            <FormItem>
+              <FormLabel>Thumbnail Image</FormLabel>
+              <FormControl>
+                <div>
+                  {previewUrl ? (
+                    <div className="relative border rounded-md p-4">
+                      <Image
+                        width={300}
+                        height={200}
+                        src={previewUrl}
+                        alt="Thumbnail preview"
+                        className="w-full h-48 object-cover rounded-md"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-6 right-6"
+                        onClick={removeImage}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div
+                      className={`border-2 border-dashed rounded-md p-8 text-center cursor-pointer transition-colors ${
+                        dragActive
+                          ? "border-primary bg-primary/5"
+                          : "border-gray-300 hover:border-gray-400"
+                      }`}
+                      onDragEnter={handleDrag}
+                      onDragLeave={handleDrag}
+                      onDragOver={handleDrag}
+                      onDrop={handleDrop}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="hidden"
+                      />
+                      <div className="flex flex-col items-center gap-2">
+                        <Upload className="h-10 w-10 text-gray-400" />
+                        <div className="text-sm text-gray-600">
+                          <span className="font-semibold text-primary">
+                            Click to upload
+                          </span>{" "}
+                          or drag and drop
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          PNG, JPG, GIF up to 10MB
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </FormControl>
+            </FormItem>
 
             {/* Featured Switch */}
             <FormField
