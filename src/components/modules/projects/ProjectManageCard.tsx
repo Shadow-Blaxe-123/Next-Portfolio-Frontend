@@ -40,6 +40,7 @@ export default function ProjectManageCard({
         `https://next-portfolio-backend-zeta.vercel.app/api/v1/projects/delete/${project.id}`,
         {
           method: "DELETE",
+          credentials: "include",
         }
       );
 

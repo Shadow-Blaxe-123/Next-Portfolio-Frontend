@@ -133,6 +133,7 @@ export default function BlogCreateForm() {
         {
           method: "POST",
           body: formData,
+          credentials: "include",
         }
       );
       const r = await res.json();

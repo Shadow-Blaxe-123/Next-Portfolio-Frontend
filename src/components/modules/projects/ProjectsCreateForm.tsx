@@ -141,10 +141,7 @@ export default function ProjectCreateForm() {
         {
           method: "POST",
           body: formData,
-          headers: {
-            Authorization:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZjhmNGI4YWZjMzdjNGUyNGQyNWMzNyIsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AZW1haWwuY29tIiwiaWF0IjoxNzYxNTg3MTI5LCJleHAiOjE3NjE2NzM1Mjl9.U93u-nFUU8K9oevNfom6_Ltn4KuGjHap48Lzhcy2x5E",
-          },
+          credentials: "include",
         }
       );
 

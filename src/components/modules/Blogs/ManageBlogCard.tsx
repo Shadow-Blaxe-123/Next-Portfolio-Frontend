@@ -40,6 +40,7 @@ export default function BlogManageCard({
         `https://next-portfolio-backend-zeta.vercel.app/api/v1/blogs/delete/${blog.id}`,
         {
           method: "DELETE",
+          credentials: "include",
         }
       );
 

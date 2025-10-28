@@ -7,8 +7,14 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { PageLayoutProps } from "@/interface";
+import getUser from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function AppLayout({ children }: PageLayoutProps) {
+export default async function DashboardLayout({ children }: PageLayoutProps) {
+  const user = await getUser();
+
+  if (!user) redirect("/login");
+
   return (
     <SidebarProvider>
       <AppSidebar />

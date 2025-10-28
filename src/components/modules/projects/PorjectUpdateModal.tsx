@@ -186,6 +186,7 @@ export default function ProjectUpdateModal({
         {
           method: "PATCH",
           body: formData,
+          credentials: "include",
         }
       );
 

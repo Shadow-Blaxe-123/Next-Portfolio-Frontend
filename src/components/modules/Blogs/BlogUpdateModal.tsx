@@ -180,6 +180,7 @@ export default function BlogUpdateModal({
         {
           method: "PATCH",
           body: formData,
+          credentials: "include",
         }
       );
 

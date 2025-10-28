@@ -6,6 +6,7 @@ export default async function fetchData<T>(
   try {
     const res = await fetch(url, {
       next: { tags },
+      credentials: "include",
     });
 
     if (!res.ok) throw new Error(`Failed to fetch ${key}`);
