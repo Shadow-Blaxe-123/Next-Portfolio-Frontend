@@ -44,10 +44,7 @@ export default function LoginPage() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            email: data.email,
-            password: data.password,
-          }),
+          body: JSON.stringify(data),
           credentials: "include",
         }
       );
@@ -69,7 +66,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white px-4">
+    // <div className="min-h-screen flex items-center justify-center bg-black text-white px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tl from-orange-600 via-rose-400 to-black text-white px-4">
       <Card className="w-full max-w-md bg-zinc-900 border-zinc-800 shadow-lg">
         <CardHeader>
           <CardTitle className="text-center text-2xl font-bold text-white">

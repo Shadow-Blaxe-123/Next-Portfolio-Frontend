@@ -7,13 +7,14 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { PageLayoutProps } from "@/interface";
-import getUser from "@/lib/auth";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({ children }: PageLayoutProps) {
-  const user = await getUser();
+  const token = (await cookies()).get("accessToken")?.value;
 
-  if (!user) redirect("/login");
+  // Server-side redirect if not logged in
+  if (!token) redirect("/login");
 
   return (
     <SidebarProvider>
