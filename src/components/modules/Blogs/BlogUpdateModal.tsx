@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Upload, X } from "lucide-react";
+import Image from "next/image";
+import { toast } from "sonner";
 
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -17,75 +19,115 @@ import {
   FormMessage,
   FormControl,
 } from "@/components/ui/form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 import "quill/dist/quill.snow.css";
 import type Quill from "quill";
-import Image from "next/image";
-import { toast } from "sonner";
-import { projectSchema } from "@/schema";
+import { Blog } from "@/interface";
+import { blogSchema } from "@/schema";
 
-type ProjectFormValues = z.infer<typeof projectSchema>;
+type BlogFormValues = z.infer<typeof blogSchema>;
 
-export default function ProjectCreateForm() {
+interface BlogUpdateModalProps {
+  blog: Blog;
+  isOpen: boolean;
+  onClose: () => void;
+  onBlogUpdated: () => void;
+}
+
+export default function BlogUpdateModal({
+  blog,
+  isOpen,
+  onClose,
+  onBlogUpdated,
+}: BlogUpdateModalProps) {
   const [submitting, setSubmitting] = useState(false);
   const [quillLoaded, setQuillLoaded] = useState(false);
   const [dragActive, setDragActive] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string>("");
+  const [previewUrl, setPreviewUrl] = useState<string>(blog.thumbnailUrl || "");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const quillRef = useRef<HTMLDivElement | null>(null);
   const editorInstance = useRef<Quill | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const form = useForm<ProjectFormValues>({
-    resolver: zodResolver(projectSchema),
+  const form = useForm<BlogFormValues>({
+    resolver: zodResolver(blogSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      content: "",
-      isFeatured: false,
-      githubUrl: "",
-      liveUrl: "",
+      title: blog.title,
+      description: blog.description,
+      content: blog.content || "",
+      isFeatured: blog.isFeatured || false,
     },
   });
 
-  //
-  // 🔹 Initialize Quill
-  //
+  // Initialize Quill when modal opens
   useEffect(() => {
+    if (!isOpen) return;
+
     async function initQuill() {
       if (typeof window === "undefined") return;
+      if (editorInstance.current) {
+        // Quill already initialized, just set content
+        editorInstance.current.root.innerHTML = blog.content || "";
+        return;
+      }
+
       const Quill = (await import("quill")).default;
-      editorInstance.current = new Quill(quillRef.current!, {
-        theme: "snow",
-        placeholder: "Write your project details here...",
-      });
+      if (quillRef.current) {
+        editorInstance.current = new Quill(quillRef.current, {
+          theme: "snow",
+          placeholder: "Write your blog content here...",
+        });
 
-      editorInstance.current.on("text-change", () => {
-        form.setValue("content", editorInstance.current!.root.innerHTML);
-      });
+        // Set initial content
+        editorInstance.current.root.innerHTML = blog.content || "";
 
-      setQuillLoaded(true);
+        editorInstance.current.on("text-change", () => {
+          if (editorInstance.current) {
+            form.setValue("content", editorInstance.current.root.innerHTML);
+          }
+        });
+
+        setQuillLoaded(true);
+      }
     }
-    initQuill();
-  }, [form]);
 
-  //
-  // 🔹 File Upload Handlers
-  //
+    // Small delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      initQuill();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [isOpen, blog.content, form]);
+
+  // Reset preview when blog changes
+  useEffect(() => {
+    setPreviewUrl(blog.thumbnailUrl || "");
+    setSelectedFile(null);
+  }, [blog]);
+
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") setDragActive(true);
-    else if (e.type === "dragleave") setDragActive(false);
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files?.[0]) {
+
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
       if (file.type.startsWith("image/")) {
         setSelectedFile(file);
@@ -97,7 +139,7 @@ export default function ProjectCreateForm() {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
+    if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       if (file.type.startsWith("image/")) {
         setSelectedFile(file);
@@ -114,10 +156,7 @@ export default function ProjectCreateForm() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  //
-  // 🔹 Submit Handler
-  //
-  async function onSubmit(values: ProjectFormValues) {
+  async function onSubmit(values: BlogFormValues) {
     setSubmitting(true);
     try {
       const formData = new FormData();
@@ -128,53 +167,59 @@ export default function ProjectCreateForm() {
           description: values.description,
           content: values.content,
           isFeatured: values.isFeatured,
-          githubUrl: values.githubUrl,
-          liveUrl: values.liveUrl,
         })
       );
-      if (selectedFile) formData.append("file", selectedFile);
 
-      console.log(...formData);
+      // Only append file if a new one was selected
+      if (selectedFile) {
+        formData.append("file", selectedFile);
+      }
 
       const res = await fetch(
-        "https://next-portfolio-backend-zeta.vercel.app/api/v1/projects/create",
+        `https://next-portfolio-backend-zeta.vercel.app/api/v1/blogs/update/${blog.id}`,
         {
-          method: "POST",
+          method: "PATCH",
           body: formData,
-          headers: {
-            Authorization:
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZjhmNGI4YWZjMzdjNGUyNGQyNWMzNyIsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AZW1haWwuY29tIiwiaWF0IjoxNzYxNTg3MTI5LCJleHAiOjE3NjE2NzM1Mjl9.U93u-nFUU8K9oevNfom6_Ltn4KuGjHap48Lzhcy2x5E",
-          },
         }
       );
 
-      const result = await res.json();
-      if (result.success) {
-        toast.success("Project created successfully!");
-        // form.reset();
-        // setPreviewUrl("");
-        // setSelectedFile(null);
-        if (editorInstance.current) editorInstance.current.root.innerHTML = "";
+      const r = await res.json();
+
+      if (r.success === true) {
+        toast.success("Blog updated successfully.");
+        await fetch("/api/revalidate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tag: "blogs" }),
+        });
+
+        onBlogUpdated();
+        onClose();
       } else {
-        toast.error("Failed to create project.");
+        toast.error("Failed to update blog.");
       }
     } catch (error) {
       console.error(error);
-      toast.error("An error occurred while creating project.");
+      toast.error("Failed to update blog.");
     } finally {
       setSubmitting(false);
     }
   }
 
-  //
-  // 🔹 UI
-  //
+  const handleClose = () => {
+    form.reset();
+    setSelectedFile(null);
+    setPreviewUrl(blog.thumbnailUrl || "");
+    onClose();
+  };
+
   return (
-    <Card className="max-w-3xl mx-auto">
-      <CardHeader>
-        <CardTitle>Create a New Project</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Update Blog</DialogTitle>
+        </DialogHeader>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Title */}
@@ -185,7 +230,7 @@ export default function ProjectCreateForm() {
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter project title..." {...field} />
+                    <Input placeholder="Enter blog title..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -201,7 +246,7 @@ export default function ProjectCreateForm() {
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Brief description of your project..."
+                      placeholder="Brief summary of your post..."
                       {...field}
                     />
                   </FormControl>
@@ -212,9 +257,9 @@ export default function ProjectCreateForm() {
 
             {/* Content */}
             <div>
-              <FormLabel>Detailed Content</FormLabel>
+              <FormLabel>Content</FormLabel>
               <div className="border rounded-md min-h-[400px]">
-                <div ref={quillRef} className="h-full" />
+                <div ref={quillRef} className="h-[400px]" />
               </div>
               {!form.getValues("content") && quillLoaded && (
                 <p className="text-sm text-red-500 mt-1">
@@ -222,43 +267,6 @@ export default function ProjectCreateForm() {
                 </p>
               )}
             </div>
-
-            {/* Links */}
-            <FormField
-              control={form.control}
-              name="githubUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>GitHub URL</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="https://github.com/..."
-                      {...field}
-                      value={field.value ?? ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="liveUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Live URL</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="https://your-live-demo.com"
-                      {...field}
-                      value={field.value ?? ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             {/* Thumbnail Upload */}
             <FormItem>
@@ -268,6 +276,7 @@ export default function ProjectCreateForm() {
                   {previewUrl ? (
                     <div className="relative border rounded-md p-4">
                       <Image
+                        loading="lazy"
                         width={300}
                         height={200}
                         src={previewUrl}
@@ -283,6 +292,11 @@ export default function ProjectCreateForm() {
                       >
                         <X className="h-4 w-4" />
                       </Button>
+                      {selectedFile && (
+                        <p className="text-sm text-gray-600 mt-2">
+                          New file selected: {selectedFile.name}
+                        </p>
+                      )}
                     </div>
                   ) : (
                     <div
@@ -341,12 +355,22 @@ export default function ProjectCreateForm() {
               )}
             />
 
-            <Button type="submit" disabled={submitting}>
-              {submitting ? "Submitting..." : "Create Project"}
-            </Button>
+            <div className="flex gap-3 justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                disabled={submitting}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={submitting}>
+                {submitting ? "Updating..." : "Update Blog"}
+              </Button>
+            </div>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </DialogContent>
+    </Dialog>
   );
 }

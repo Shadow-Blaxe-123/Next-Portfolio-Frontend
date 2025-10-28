@@ -3,15 +3,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Blog } from "@/interface";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,9 +21,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import BlogUpdateModal from "./BlogUpdateModal";
+import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
 
 export default function BlogManageCard({
   blog,
@@ -34,44 +33,26 @@ export default function BlogManageCard({
   onBlogUpdated: () => void;
 }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editedBlog, setEditedBlog] = useState(blog);
-  const [loading, setLoading] = useState(false);
-
-  async function handleUpdate() {
-    setLoading(true);
-    try {
-      const res = await fetch(
-        `https://next-portfolio-backend-zeta.vercel.app/api/v1/blogs/update/${blog.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(editedBlog),
-        }
-      );
-
-      if (!res.ok) throw new Error("Failed to update blog");
-
-      toast.success("Blog updated successfully");
-      setIsEditOpen(false);
-      onBlogUpdated();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to update blog");
-    } finally {
-      setLoading(false);
-    }
-  }
 
   async function handleDelete() {
     try {
       const res = await fetch(
         `https://next-portfolio-backend-zeta.vercel.app/api/v1/blogs/delete/${blog.id}`,
-        { method: "DELETE" }
+        {
+          method: "DELETE",
+        }
       );
 
-      if (!res.ok) throw new Error("Failed to delete blog");
+      if (!res.ok) {
+        toast.error("Failed to delete blog");
+      }
 
       toast.success("Blog deleted successfully");
+      await fetch("/api/revalidate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tag: "blogs" }),
+      });
       onBlogUpdated();
     } catch (err) {
       console.error(err);
@@ -80,26 +61,29 @@ export default function BlogManageCard({
   }
 
   return (
-    <Card className="max-w-lg mx-auto">
-      <CardHeader>
-        <CardTitle>{blog.title}</CardTitle>
-      </CardHeader>
+    <>
+      <Card className="w-full max-w-lg mx-auto">
+        <CardHeader>
+          <CardTitle>{blog.title}</CardTitle>
+        </CardHeader>
 
-      {blog.thumbnailUrl && (
-        <div className="relative w-full h-48">
-          <Image
-            src={blog.thumbnailUrl}
-            alt={blog.title}
-            fill
-            className="object-cover rounded-md"
-          />
-        </div>
-      )}
+        {blog.thumbnailUrl && (
+          <div className="relative w-full h-48">
+            <Image
+              src={blog.thumbnailUrl}
+              alt={blog.title}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover rounded-md"
+            />
+          </div>
+        )}
 
-      <CardContent className="space-y-4 mt-4">
-        <p className="text-sm text-gray-600 line-clamp-3">{blog.description}</p>
+        <CardContent>
+          <p>{blog.description}</p>
+        </CardContent>
 
-        <div className="flex justify-between">
+        <CardFooter className="grid grid-cols-2 gap-9">
           <Button variant="outline" onClick={() => setIsEditOpen(true)}>
             Edit
           </Button>
@@ -113,6 +97,9 @@ export default function BlogManageCard({
                 <AlertDialogTitle>
                   Are you sure you want to delete this blog?
                 </AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone.
+                </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -122,48 +109,15 @@ export default function BlogManageCard({
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-        </div>
-      </CardContent>
+        </CardFooter>
+      </Card>
 
-      {/* Update Modal */}
-      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Blog</DialogTitle>
-          </DialogHeader>
-
-          <div className="space-y-4">
-            <Input
-              value={editedBlog.title}
-              onChange={(e) =>
-                setEditedBlog({ ...editedBlog, title: e.target.value })
-              }
-              placeholder="Title"
-            />
-            <Textarea
-              value={editedBlog.description}
-              onChange={(e) =>
-                setEditedBlog({ ...editedBlog, description: e.target.value })
-              }
-              placeholder="Description"
-              className="min-h-[120px]"
-            />
-            <Input
-              value={editedBlog.thumbnailUrl || ""}
-              onChange={(e) =>
-                setEditedBlog({ ...editedBlog, thumbnailUrl: e.target.value })
-              }
-              placeholder="Thumbnail URL"
-            />
-          </div>
-
-          <DialogFooter>
-            <Button onClick={handleUpdate} disabled={loading}>
-              {loading ? "Saving..." : "Save Changes"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </Card>
+      <BlogUpdateModal
+        blog={blog}
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        onBlogUpdated={onBlogUpdated}
+      />
+    </>
   );
 }
