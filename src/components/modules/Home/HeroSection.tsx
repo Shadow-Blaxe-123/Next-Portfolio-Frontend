@@ -65,7 +65,7 @@ function HeroSection() {
         <div className="flex justify-center mt-8">
           {/* View Resume */}
           <Link
-            href="/resume.pdf" // place your PDF inside "public" folder
+            href="https://drive.google.com/file/d/1KMVip8mZlbI3lPUZnrllnJqQw7C1pbgE/view?usp=drive_link" // place your PDF inside "public" folder
             target="_blank"
             rel="noopener noreferrer"
           >

@@ -1,65 +1,133 @@
-# Project Overview
+# Personal Portfolio Website
 
-- **Dashboard**: A centralized dashboard to manage blog posts and view dynamic project content.
-- **Blog Management**: Create a dynamic blog management system that allows owner to create, read, update, and delete blogs (Owner Only).
-
-## Tech Stack
-
-- **For notifications**: react-hot-toast
-
-## 📌 Minimum Requirements
-
-### Private Pages (Only for Portfolio Owner)
-
-- **Dashboard**
-  - A dynamic **owner-only dashboard** where the owner can access a private dashboard to manage blogs, projects, and other content.
+This is my personal portfolio, to showcase my experience and achievements as a developer to the world.
 
 ---
 
-## Bonus (Optional)
+## Project Overview
 
-This section is not required to meet the main requirements, but completing it can help you earn full marks.
+This is the **frontend part** of a personal portfolio website, providing:
 
-- **Rich Text Editor**
-  - Use a **rich text editor** to create, edit, and format blog/project content.
-  - Include options like bold, italic, links, images, etc.
-  - **Example Package:** React Quill
+* **Public Pages**: Home, About Section, Blog list, Individual blog pages, Projects list, individual project pages.
+* **Private Pages**: Owner dashboard with CRUD operations for blogs and projects.
+* **Dynamic content** using Next.js **ISR (Incremental Static Regeneration)**.
+* **Responsive and dark-mode-first UI** for optimal user experience.
 
-## ❄️ General UI/UX Enhancements
+---
 
-- Interactive UI: carousels, cards, skeletons and smooth transitions.
-- Lazy-loading for heavy assets, no broken links or non-functional buttons.
-- Accessibility-compliant components and semantic HTML.
-- **Strict Error Handling (⚠️ Mandatory for Full Marks)**
-  - Proper form validation with clear error messages (e.g., required fields, invalid email, password mismatch).
-  - User-friendly messages for API/network errors and unauthorized actions.
-  - Success/error feedback via toast/alerts (e.g., `react-hot-toast`).
+## Tech Stack
 
-## Submission Guidelines
+* **Frontend Framework**: Next.js (App Router)
+* **Language**: TypeScript
+* **Styling**: Tailwind CSS + Shadcn UI components
+* **State & Forms**: React Hook Form, Zod (for validation)
+* **Routing & Navigation**: Next.js navigation & layouts
+* **Rich Text Editor**: Quill.js (for blogs/projects)
+* **Notifications**: Sonner (`toast` for success/error)
 
-### 1. Codebase
+---
 
-- Clean, modular code following best practices.
-- Include a comprehensive `README.md` with:
-  - Live deployment link
-  - Project overview & features
-  - Technology stack
-  - Setup instructions
-  - Any other relevant notes
+## Features
 
-### 2. GitHub Repository
+### Public Pages
 
-- Separate repositories/mono for **Frontend** and **Backend**.
-- Minimum **10 meaningful commits** per repo showing development progress.
+* **About Me** section with SSG for fast load.
+* **Project List & Details** with thumbnails, live links, and descriptions.
+* **Blog List & Details** pages using ISR (`getStaticProps` + `revalidate`) for dynamic updates.
 
-### 3. Live Deployment
+### Private Pages
 
-- Provide live URLs for both frontend and backend.
+* **Login** (JWT-based) for portfolio owner.
+* **Dashboard** to manage blogs and projects (CRUD).
+* **Rich text editor** for content creation with formatting, images, and links.
+* **Server-side protected routes** using `cookies` for authentication.
 
-### 4. Demo Video
+---
 
-- 10-15 minute walkthrough of the project.
+## Project Structure
 
-### 5. Credentials
+```plaintext
+src/
+├─ app/                      # Next.js pages and layouts
+|  ├─ login/                 # Login page
+|  ├─ api/                   # Helper API
+│  ├─ (private)/             # Owner dashboard (private)
+│  |   └─ dashboard/         # Owner dashboard (private)
+│  |     ├─ blogs/           # Private CRUD Blogs
+│  |     └─ projects/        # Private CRUD projects
+│  ├─ (public)/              # Public Routes
+│      ├─ blogs/             # Public blog pages
+│      └─ projects/          # Public project pages
+├─ components/               # UI components & Shadcn components
+│  ├─ ui/                    # Inputs, Buttons, Modals, Cards
+│  ├─ modules/               # Cards, forms, particles background
+├─ interface/                # TypeScript interfaces (Blog, Project, User)
+├─ lib/                      # Helper functions (fetch, auth)
+├─ schema/                   # Zod Schema
+└─ provider/                 # Theme Provider
+```
 
-- Provide admin login details (email & password) for testing.
+---
+
+## Getting Started
+
+1. **Clone the repository**
+
+    ```bash
+          git clone <repo-url>
+          cd frontend
+    ```
+
+2. **Install dependencies**
+
+    ```bash
+        npm install
+        # or
+        yarn
+    ```
+
+3. **Run development server**
+
+    ```bash
+        npm run dev
+        # or
+        yarn dev
+    ```
+
+The frontend will be available at [http://localhost:3000](http://localhost:3000).
+
+---
+
+## Scripts
+
+* `dev` – Run the development server.
+* `build` – Build the production version.
+* `start` – Start the production server.
+* `lint` – Run ESLint checks.
+* `format` – Run Prettier formatting.
+
+---
+
+## UI/UX Highlights
+
+* **Dark-mode-first design** (always-on dark theme).
+* **Shadcn UI components** for consistent styling (Cards, Buttons, Modals, Forms).
+* **Responsive layout** for desktop and mobile devices.
+* **Interactive elements**: Modals for updating/deleting blogs/projects, toast notifications for actions.
+* **Rich Text Editor** (React Quill) for blog/project content.
+
+---
+
+## Authentication
+
+* JWT-based authentication.
+* Cookies (`accessToken`) are stored **httpOnly**.
+* Private routes (dashboard, blog/project management) are protected server-side.
+* Login errors and validation feedback handled via `toast`.
+
+---
+
+## Notifications
+
+* Success and error messages via **Sonner toast**.
+* Used for login success/failure, form submissions, CRUD operations
