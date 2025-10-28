@@ -23,15 +23,7 @@ import "quill/dist/quill.snow.css";
 import type Quill from "quill";
 import Image from "next/image";
 import { toast } from "sonner";
-
-const blogSchema = z.object({
-  title: z.string().min(3, "Title must be at least 3 characters."),
-  description: z
-    .string()
-    .min(10, "Description must be at least 10 characters."),
-  content: z.string().min(1, "Content cannot be empty."),
-  isFeatured: z.boolean(),
-});
+import { blogSchema } from "@/schema";
 
 type BlogFormValues = z.infer<typeof blogSchema>;
 
