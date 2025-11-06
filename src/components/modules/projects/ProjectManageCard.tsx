@@ -53,6 +53,7 @@ export default function ProjectManageCard({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tag: "projects" }),
+        credentials: "include",
       });
       onProjectUpdated();
     } catch (err) {

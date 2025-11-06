@@ -53,6 +53,7 @@ export default function BlogManageCard({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tag: "blogs" }),
+        credentials: "include",
       });
       onBlogUpdated();
     } catch (err) {

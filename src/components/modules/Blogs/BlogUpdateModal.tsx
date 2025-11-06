@@ -191,6 +191,7 @@ export default function BlogUpdateModal({
         await fetch("/api/revalidate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify({ tag: "blogs" }),
         });
 

@@ -38,7 +38,8 @@ export default function LoginPage() {
 
       console.log(data);
       const res = await fetch(
-        "https://next-portfolio-backend-zeta.vercel.app/api/v1/auth/login",
+        "http://localhost:5000/api/v1/auth/login",
+        // "https://next-portfolio-backend-zeta.vercel.app/api/v1/auth/login",
         {
           method: "POST",
           headers: {
@@ -50,6 +51,7 @@ export default function LoginPage() {
       );
 
       const resJson = await res.json();
+
       console.log(resJson);
 
       if (resJson.success) {
@@ -66,11 +68,11 @@ export default function LoginPage() {
   };
 
   return (
-    // <div className="min-h-screen flex items-center justify-center bg-black text-white px-4">
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tl from-orange-600 via-rose-400 to-black text-white px-4">
-      <Card className="w-full max-w-md bg-zinc-900 border-zinc-800 shadow-lg">
+    // <div className="flex items-center justify-center min-h-screen px-4 text-white bg-black">
+    <div className="flex items-center justify-center min-h-screen px-4 text-white bg-gradient-to-tl from-orange-600 via-rose-400 to-black">
+      <Card className="w-full max-w-md shadow-lg bg-zinc-900 border-zinc-800">
         <CardHeader>
-          <CardTitle className="text-center text-2xl font-bold text-white">
+          <CardTitle className="text-2xl font-bold text-center text-white">
             Welcome Back 👋
           </CardTitle>
         </CardHeader>
@@ -84,10 +86,10 @@ export default function LoginPage() {
                 type="email"
                 placeholder="you@example.com"
                 {...register("email")}
-                className="bg-zinc-800 border-zinc-700 text-white focus-visible:ring-zinc-600"
+                className="text-white bg-zinc-800 border-zinc-700 focus-visible:ring-zinc-600"
               />
               {errors.email && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="mt-1 text-sm text-red-500">
                   {errors.email.message}
                 </p>
               )}
@@ -100,10 +102,10 @@ export default function LoginPage() {
                 type="password"
                 placeholder="••••••••"
                 {...register("password")}
-                className="bg-zinc-800 border-zinc-700 text-white focus-visible:ring-zinc-600"
+                className="text-white bg-zinc-800 border-zinc-700 focus-visible:ring-zinc-600"
               />
               {errors.password && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="mt-1 text-sm text-red-500">
                   {errors.password.message}
                 </p>
               )}
@@ -111,12 +113,12 @@ export default function LoginPage() {
 
             <Button
               type="submit"
-              className="w-full bg-white text-black hover:bg-zinc-200"
+              className="w-full text-black bg-white hover:bg-zinc-200"
               disabled={loading}
             >
               {loading ? (
                 <>
-                  <Loader2 className="animate-spin mr-2 h-4 w-4" /> Logging
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Logging
                   in...
                 </>
               ) : (

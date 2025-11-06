@@ -12,7 +12,7 @@ import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({ children }: PageLayoutProps) {
   const token = (await cookies()).get("accessToken")?.value;
-
+  console.log(token);
   // Server-side redirect if not logged in
   if (!token) redirect("/login");
 

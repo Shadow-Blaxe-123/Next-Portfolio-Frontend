@@ -198,6 +198,7 @@ export default function ProjectUpdateModal({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ tag: "projects" }),
+          credentials: "include",
         });
 
         onProjectUpdated();
