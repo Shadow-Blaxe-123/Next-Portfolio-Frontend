@@ -30,6 +30,7 @@ import "quill/dist/quill.snow.css";
 import type Quill from "quill";
 import { Project } from "@/interface";
 import { projectSchema } from "@/schema";
+import { getAuthToken } from "@/lib/auth";
 
 type ProjectFormValues = z.infer<typeof projectSchema>;
 
@@ -161,6 +162,7 @@ export default function ProjectUpdateModal({
   };
 
   async function onSubmit(values: ProjectFormValues) {
+    const token = getAuthToken();
     setSubmitting(true);
     try {
       const formData = new FormData();
@@ -187,6 +189,9 @@ export default function ProjectUpdateModal({
           method: "PATCH",
           body: formData,
           credentials: "include",
+          headers: {
+            Authorization: `${token}`,
+          },
         }
       );
 
@@ -270,7 +275,7 @@ export default function ProjectUpdateModal({
                 <div ref={quillRef} className="h-[400px]" />
               </div>
               {!form.getValues("content") && quillLoaded && (
-                <p className="text-sm text-red-500 mt-1">
+                <p className="mt-1 text-sm text-red-500">
                   Content cannot be empty
                 </p>
               )}
@@ -320,14 +325,14 @@ export default function ProjectUpdateModal({
               <FormControl>
                 <div>
                   {previewUrl ? (
-                    <div className="relative border rounded-md p-4">
+                    <div className="relative p-4 border rounded-md">
                       <Image
                         loading="lazy"
                         width={300}
                         height={200}
                         src={previewUrl}
                         alt="Thumbnail preview"
-                        className="w-full h-48 object-cover rounded-md"
+                        className="object-cover w-full h-48 rounded-md"
                       />
                       <Button
                         type="button"
@@ -336,10 +341,10 @@ export default function ProjectUpdateModal({
                         className="absolute top-6 right-6"
                         onClick={removeImage}
                       >
-                        <X className="h-4 w-4" />
+                        <X className="w-4 h-4" />
                       </Button>
                       {selectedFile && (
-                        <p className="text-sm text-gray-600 mt-2">
+                        <p className="mt-2 text-sm text-gray-600">
                           New file selected: {selectedFile.name}
                         </p>
                       )}
@@ -365,7 +370,7 @@ export default function ProjectUpdateModal({
                         className="hidden"
                       />
                       <div className="flex flex-col items-center gap-2">
-                        <Upload className="h-10 w-10 text-gray-400" />
+                        <Upload className="w-10 h-10 text-gray-400" />
                         <div className="text-sm text-gray-600">
                           <span className="font-semibold text-primary">
                             Click to upload
@@ -387,7 +392,7 @@ export default function ProjectUpdateModal({
               control={form.control}
               name="isFeatured"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between border rounded-md p-3">
+                <FormItem className="flex items-center justify-between p-3 border rounded-md">
                   <div>
                     <FormLabel>Featured</FormLabel>
                   </div>
@@ -401,7 +406,7 @@ export default function ProjectUpdateModal({
               )}
             />
 
-            <div className="flex gap-3 justify-end">
+            <div className="flex justify-end gap-3">
               <Button
                 type="button"
                 variant="outline"

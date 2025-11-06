@@ -24,6 +24,7 @@ import {
 import { toast } from "sonner";
 import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
 import ProjectUpdateModal from "./PorjectUpdateModal";
+import { getAuthToken } from "@/lib/auth";
 
 export default function ProjectManageCard({
   project,
@@ -35,12 +36,16 @@ export default function ProjectManageCard({
   const [isEditOpen, setIsEditOpen] = useState(false);
 
   async function handleDelete() {
+    const token = getAuthToken();
     try {
       const res = await fetch(
         `https://next-portfolio-backend-zeta.vercel.app/api/v1/projects/delete/${project.id}`,
         {
           method: "DELETE",
           credentials: "include",
+          headers: {
+            Authorization: `${token}`,
+          },
         }
       );
 

@@ -24,6 +24,7 @@ import {
 import { toast } from "sonner";
 import BlogUpdateModal from "./BlogUpdateModal";
 import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
+import { getAuthToken } from "@/lib/auth";
 
 export default function BlogManageCard({
   blog,
@@ -33,6 +34,7 @@ export default function BlogManageCard({
   onBlogUpdated: () => void;
 }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const token = getAuthToken();
 
   async function handleDelete() {
     try {
@@ -41,6 +43,9 @@ export default function BlogManageCard({
         {
           method: "DELETE",
           credentials: "include",
+          headers: {
+            Authorization: `${token}`,
+          },
         }
       );
 

@@ -24,6 +24,7 @@ import type Quill from "quill";
 import Image from "next/image";
 import { toast } from "sonner";
 import { blogSchema } from "@/schema";
+import { getAuthToken } from "@/lib/auth";
 
 type BlogFormValues = z.infer<typeof blogSchema>;
 
@@ -112,6 +113,7 @@ export default function BlogCreateForm() {
   };
 
   async function onSubmit(values: BlogFormValues) {
+    const token = getAuthToken();
     setSubmitting(true);
     try {
       const formData = new FormData();
@@ -134,6 +136,9 @@ export default function BlogCreateForm() {
           method: "POST",
           body: formData,
           credentials: "include",
+          headers: {
+            Authorization: `${token}`,
+          },
         }
       );
       const r = await res.json();
@@ -204,7 +209,7 @@ export default function BlogCreateForm() {
                 <div ref={quillRef} className="h-full" />
               </div>
               {!form.getValues("content") && quillLoaded && (
-                <p className="text-sm text-red-500 mt-1">
+                <p className="mt-1 text-sm text-red-500">
                   Content cannot be empty
                 </p>
               )}
@@ -216,13 +221,13 @@ export default function BlogCreateForm() {
               <FormControl>
                 <div>
                   {previewUrl ? (
-                    <div className="relative border rounded-md p-4">
+                    <div className="relative p-4 border rounded-md">
                       <Image
                         width={300}
                         height={200}
                         src={previewUrl}
                         alt="Thumbnail preview"
-                        className="w-full h-48 object-cover rounded-md"
+                        className="object-cover w-full h-48 rounded-md"
                       />
                       <Button
                         type="button"
@@ -231,7 +236,7 @@ export default function BlogCreateForm() {
                         className="absolute top-6 right-6"
                         onClick={removeImage}
                       >
-                        <X className="h-4 w-4" />
+                        <X className="w-4 h-4" />
                       </Button>
                     </div>
                   ) : (
@@ -255,7 +260,7 @@ export default function BlogCreateForm() {
                         className="hidden"
                       />
                       <div className="flex flex-col items-center gap-2">
-                        <Upload className="h-10 w-10 text-gray-400" />
+                        <Upload className="w-10 h-10 text-gray-400" />
                         <div className="text-sm text-gray-600">
                           <span className="font-semibold text-primary">
                             Click to upload
@@ -277,7 +282,7 @@ export default function BlogCreateForm() {
               control={form.control}
               name="isFeatured"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between border rounded-md p-3">
+                <FormItem className="flex items-center justify-between p-3 border rounded-md">
                   <div>
                     <FormLabel>Featured</FormLabel>
                   </div>

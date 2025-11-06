@@ -1,5 +1,6 @@
-import { AppSidebar } from "@/components/app-sidebar";
+"use client";
 
+import { AppSidebar } from "@/components/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -7,28 +8,43 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { PageLayoutProps } from "@/interface";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default async function DashboardLayout({ children }: PageLayoutProps) {
-  const token = (await cookies()).get("accessToken")?.value;
-  console.log(token);
-  // Server-side redirect if not logged in
-  if (!token) redirect("/login");
+export default function DashboardLayout({ children }: PageLayoutProps) {
+  const router = useRouter();
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      router.push("/login");
+    } else {
+      setIsAuthorized(true);
+    }
+  }, [router]);
+
+  if (!isAuthorized) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b">
+        <header className="flex items-center h-16 gap-2 border-b shrink-0">
           <div className="flex items-center gap-2 px-3">
             <SidebarTrigger />
-            <Separator orientation="vertical" className="mr-2 h-4" />
+            <Separator orientation="vertical" className="h-4 mr-2" />
           </div>
         </header>
 
-        {/* Page content */}
-        <main className="flex flex-1 flex-col gap-4 p-4">{children}</main>
+        <main className="flex flex-col flex-1 gap-4 p-4">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );
